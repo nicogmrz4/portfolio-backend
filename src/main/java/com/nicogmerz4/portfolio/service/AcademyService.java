@@ -4,6 +4,7 @@ import com.nicogmerz4.portfolio.model.Academy;
 import com.nicogmerz4.portfolio.repository.AcademyRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +14,18 @@ public class AcademyService {
     AcademyRepository repo;
     
     public CustomResponse getAcademies() {
-        List<Academy> projects = repo.findAll();
+        List<Academy> academies = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
         CustomResponse response = new CustomResponse();
-        response.getBody().setData(projects);
+        response.getBody().setData(academies);
         return response;
     }
     
     public CustomResponse findAcademy(Long id) {
-        Academy project = repo.findById(id).orElse(null);
+        Academy academy = repo.findById(id).orElse(null);
         CustomResponse response = new CustomResponse();
     
-        if (project != null) {
-            response.getBody().addData(project);
+        if (academy != null) {
+            response.getBody().addData(academy);
             return response;
         }
         
@@ -34,20 +35,20 @@ public class AcademyService {
     }
     
     public CustomResponse createAcademy(Academy newAcademy) {
-        Academy project = repo.save(newAcademy);
+        Academy academy = repo.save(newAcademy);
         CustomResponse response = new CustomResponse();
         response.getBody().setMessage("Academy created");
-        response.getBody().addData(project);
+        response.getBody().addData(academy);
         response.setHttpStatus(HttpStatus.CREATED);
         return response;
     }
     
     public CustomResponse deleteAcademy(Long id) {
-        Academy project = repo.findById(id).orElse(null);
+        Academy academy = repo.findById(id).orElse(null);
         CustomResponse response = new CustomResponse();
     
-        if (project != null) {
-            repo.delete(project);
+        if (academy != null) {
+            repo.delete(academy);
             response.getBody().setMessage("Academy deleted");
             return response;
         }
@@ -58,14 +59,14 @@ public class AcademyService {
     }
     
     public CustomResponse editAcademy(Long id, Academy editedAcademy) {
-        Academy project = repo.findById(id).orElse(null);
+        Academy academy = repo.findById(id).orElse(null);
         CustomResponse response = new CustomResponse();
     
-        if (project != null) {
-            project = editedAcademy;
-            project.setId(id);
-            repo.save(project);
-            response.getBody().addData(project);
+        if (academy != null) {
+            academy = editedAcademy;
+            academy.setId(id);
+            repo.save(academy);
+            response.getBody().addData(academy);
             response.getBody().setMessage("Academy edited");
             return response;
         }
