@@ -16,6 +16,7 @@ public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    private String logo;
     private String company;
     private String description;
     private String job;
