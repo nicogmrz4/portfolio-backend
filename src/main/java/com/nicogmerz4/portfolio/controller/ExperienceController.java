@@ -1,9 +1,13 @@
 package com.nicogmerz4.portfolio.controller;
 
+import com.nicogmerz4.portfolio.dto.ExperienceDTO;
 import com.nicogmerz4.portfolio.model.Experience;
 import com.nicogmerz4.portfolio.service.CustomResponse;
 import com.nicogmerz4.portfolio.service.ExperienceService;
 import com.sun.net.httpserver.Headers;
+import jakarta.validation.Valid;
+import java.text.ParseException;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -38,19 +42,18 @@ public class ExperienceController {
     @GetMapping("/{id}")
     public ResponseEntity findExperience(@PathVariable Long id) {
         CustomResponse response = service.findExperience(id);
-        
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
     
     @PostMapping
-    public ResponseEntity createExperience(@RequestBody Experience newExperience){
+    public ResponseEntity createExperience(@RequestBody @Valid ExperienceDTO newExperience) throws ParseException{
         CustomResponse response = service.createExperience(newExperience);
 
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity findExperience(@PathVariable Long id, @RequestBody Experience editedExperience) {
+    public ResponseEntity findExperience(@PathVariable Long id, @RequestBody @Valid ExperienceDTO editedExperience) throws ParseException {
         CustomResponse response = service.editExperience(id, editedExperience);
         
         return new ResponseEntity(response.getBody(), response.getHttpStatus());

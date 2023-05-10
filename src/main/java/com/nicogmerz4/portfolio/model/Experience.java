@@ -5,7 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.AssertFalse;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +25,6 @@ public class Experience {
     private String company;
     private String description;
     private String job;
-    @JsonFormat(pattern="MM/yyyy")
     private Date periodFrom;
-    @JsonFormat(pattern="MM/yyyy")
     private Date periodAt;
 }

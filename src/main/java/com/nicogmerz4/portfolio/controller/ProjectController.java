@@ -1,5 +1,6 @@
 package com.nicogmerz4.portfolio.controller;
 
+import com.nicogmerz4.portfolio.dto.ProjectDTO;
 import com.nicogmerz4.portfolio.service.CustomResponse;
 import com.nicogmerz4.portfolio.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.nicogmerz4.portfolio.service.ProjectService;
+import jakarta.validation.Valid;
+import java.text.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,14 +40,14 @@ public class ProjectController {
     }
     
     @PostMapping
-    public ResponseEntity createProject(@RequestBody Project newProject){
+    public ResponseEntity createProject(@RequestBody @Valid ProjectDTO newProject) throws ParseException{
         CustomResponse response = service.createProject(newProject);
 
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity findProject(@PathVariable Long id, @RequestBody Project editedProject) {
+    public ResponseEntity findProject(@PathVariable Long id, @RequestBody @Valid ProjectDTO editedProject) throws ParseException {
         CustomResponse response = service.editProject(id, editedProject);
         
         return new ResponseEntity(response.getBody(), response.getHttpStatus());

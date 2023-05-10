@@ -1,8 +1,11 @@
 package com.nicogmerz4.portfolio.controller;
 
-import com.nicogmerz4.portfolio.model.Academy;
-import com.nicogmerz4.portfolio.service.AcademyService;
+import com.nicogmerz4.portfolio.dto.EducationDTO;
+import com.nicogmerz4.portfolio.model.Education;
+import com.nicogmerz4.portfolio.service.EducationService;
 import com.nicogmerz4.portfolio.service.CustomResponse;
+import jakarta.validation.Valid;
+import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,45 +17,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/academies")
+@RequestMapping("/api/educations")
 @RestController
-public class AcademyController {
-        
+public class EducationController {
+
     @Autowired
-    private AcademyService service;
-    
+    private EducationService service;
+
     @GetMapping
-    public ResponseEntity getAcademys() {
-        CustomResponse response = service.getAcademies();
-        
-        return new ResponseEntity(response.getBody(), response.getHttpStatus());
-    }
-    
-    @GetMapping("/{id}")
-    public ResponseEntity findAcademy(@PathVariable Long id) {
-        CustomResponse response = service.findAcademy(id);
-        
-        return new ResponseEntity(response.getBody(), response.getHttpStatus());
-    }
-    
-    @PostMapping
-    public ResponseEntity createAcademy(@RequestBody Academy newAcademy){
-        CustomResponse response = service.createAcademy(newAcademy);
+    public ResponseEntity getEducations() {
+        CustomResponse response = service.getEducations();
 
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity findAcademy(@PathVariable Long id, @RequestBody Academy editedAcademy) {
-        CustomResponse response = service.editAcademy(id, editedAcademy);
-        
+
+    @GetMapping("/{id}")
+    public ResponseEntity findEducation(@PathVariable Long id) {
+        CustomResponse response = service.findEducation(id);
+
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
-    
+
+    @PostMapping
+    public ResponseEntity createEducation(@RequestBody @Valid EducationDTO newEducation) throws ParseException {
+        CustomResponse response = service.createEducation(newEducation);
+
+        return new ResponseEntity(response.getBody(), response.getHttpStatus());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity findEducation(@PathVariable Long id, @RequestBody @Valid EducationDTO editedEducation) throws ParseException {
+        CustomResponse response = service.editEducation(id, editedEducation);
+
+        return new ResponseEntity(response.getBody(), response.getHttpStatus());
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteAcademy(@PathVariable Long id) {
-        CustomResponse response = service.deleteAcademy(id);
-        
+    public ResponseEntity deleteEducation(@PathVariable Long id) {
+        CustomResponse response = service.deleteEducation(id);
+
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
 }

@@ -1,8 +1,10 @@
 package com.nicogmerz4.portfolio.controller;
 
+import com.nicogmerz4.portfolio.dto.SkillDTO;
 import com.nicogmerz4.portfolio.model.Skill;
 import com.nicogmerz4.portfolio.service.CustomResponse;
 import com.nicogmerz4.portfolio.service.SkillService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,14 +31,14 @@ public class SkillController {
     }
     
     @PostMapping
-    public ResponseEntity createSkill(@RequestBody Skill newSkill){
+    public ResponseEntity createSkill(@RequestBody @Valid SkillDTO newSkill){
         CustomResponse response = service.createSkill(newSkill);
 
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity findSkill(@PathVariable Long id, @RequestBody Skill editedSkill) {
+    public ResponseEntity findSkill(@PathVariable Long id, @RequestBody @Valid SkillDTO editedSkill) {
         CustomResponse response = service.editSkill(id, editedSkill);
         
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
