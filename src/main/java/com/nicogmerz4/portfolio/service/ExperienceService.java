@@ -1,5 +1,6 @@
 package com.nicogmerz4.portfolio.service;
 
+import com.nicogmerz4.portfolio.utils.ObjectMapperUtils;
 import com.nicogmerz4.portfolio.dto.ExperienceDTO;
 import com.nicogmerz4.portfolio.repository.ExperienceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,14 @@ import org.springframework.http.HttpStatus;
 
 @Service
 public class ExperienceService {
-
     @Autowired
     ExperienceRepository repo;
 
     public CustomResponse getExperiences() {
         List<Experience> experiences = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<ExperienceDTO> experiencesDTO = ObjectMapperUtils.mapAll(experiences, ExperienceDTO.class);
         CustomResponse response = new CustomResponse();
-        response.getBody().setData(experiences);
+        response.getBody().setData(experiencesDTO);
         return response;
     }
 
@@ -46,11 +47,13 @@ public class ExperienceService {
         experience.setPeriodFrom(new SimpleDateFormat("MM/yyyy").parse(newExperience.getPeriodFrom()));
         experience.setPeriodAt(new SimpleDateFormat("MM/yyyy").parse(newExperience.getPeriodAt()));
 
-        repo.save(experience);
-
+        experience = repo.save(experience);
+        
+        newExperience.setId(experience.getId());
+        
         CustomResponse response = new CustomResponse();
         response.getBody().setMessage("Experience created");
-        response.getBody().addData(experience);
+        response.getBody().addData(newExperience);
         response.setHttpStatus(HttpStatus.CREATED);
         return response;
     }
@@ -83,8 +86,10 @@ public class ExperienceService {
             experience.setPeriodAt(new SimpleDateFormat("MM/yyyy").parse(editedExperience.getPeriodAt()));
 
             repo.save(experience);
-            
-            response.getBody().addData(experience);
+    
+            editedExperience.setId(id);
+
+            response.getBody().addData(editedExperience);
             response.getBody().setMessage("Experience edited");
             return response;
         }

@@ -8,8 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.nicogmerz4.portfolio.repository.EducationRepository;
+import com.nicogmerz4.portfolio.utils.ObjectMapperUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 @Service
 public class EducationService {
@@ -17,9 +19,10 @@ public class EducationService {
     EducationRepository repo;
     
     public CustomResponse getEducations() {
-        List<Education> academies = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<Education> educations = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<EducationDTO> educationsDTO = ObjectMapperUtils.mapAll(educations, EducationDTO.class);
         CustomResponse response = new CustomResponse();
-        response.getBody().setData(academies);
+        response.getBody().setData(educationsDTO);
         return response;
     }
     
@@ -44,10 +47,14 @@ public class EducationService {
         education.setDescription(newEducation.getDescription());
         education.setPeriodFrom(new SimpleDateFormat("MM/yyyy").parse(newEducation.getPeriodFrom()));
         education.setPeriodAt(new SimpleDateFormat("MM/yyyy").parse(newEducation.getPeriodAt()));
-            
+        
+        education = repo.save(education);
+        
+        newEducation.setId(education.getId());
+        
         CustomResponse response = new CustomResponse();
         response.getBody().setMessage("Education created");
-        response.getBody().addData(education);
+        response.getBody().addData(newEducation);
         response.setHttpStatus(HttpStatus.CREATED);
         return response;
     }
@@ -76,11 +83,13 @@ public class EducationService {
             education.setCareer(editedEducation.getCareer());
             education.setDescription(editedEducation.getDescription());
             education.setPeriodFrom(new SimpleDateFormat("MM/yyyy").parse(editedEducation.getPeriodFrom()));
-            education.setPeriodAt(new SimpleDateFormat("MM/yyyy").parse(editedEducation.getPeriodAt()));
+            education.setPeriodAt(new SimpleDateFormat("MM/yyyy").parse(editedEducation.getPeriodAt()));  
             
             repo.save(education);
             
-            response.getBody().addData(education);
+            editedEducation.setId(id);
+            
+            response.getBody().addData(editedEducation);
             response.getBody().setMessage("Education edited");
             return response;
         }

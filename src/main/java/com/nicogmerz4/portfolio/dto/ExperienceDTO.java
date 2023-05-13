@@ -1,7 +1,6 @@
 package com.nicogmerz4.portfolio.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -19,9 +18,9 @@ public class ExperienceDTO {
     @Size(max = 220, message = "La descripción puede tener hasta {max} carácteres.")
     private String description;
     @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")
-    @Pattern(regexp = "[0-9]{1,2}/[0-9]{4}", message = "Formato de fecha invalido. El formado debe ser mm/yyyy")
+    @Pattern(regexp = "([1-9]{1}[0-2]{0,1})/[0-9]{4}", message = "Formato de fecha invalido. El formado debe ser m/yyyy")
     private String periodFrom;
     @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")
-    @Pattern(regexp = "[0-9]{1,2}/[0-9]{4}", message = "Formato de fecha invalido. El formado debe ser mm/yyyy")
+    @Pattern(regexp = "([1-9]{1}[0-2]{0,1})/[0-9]{4}", message = "Formato de fecha invalido. El formado debe ser m/yyyy")
     private String periodAt;
 }

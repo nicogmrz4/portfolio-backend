@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nicogmerz4.portfolio.repository.ProjectRepository;
 import com.nicogmerz4.portfolio.model.Project;
+import com.nicogmerz4.portfolio.utils.ObjectMapperUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -18,8 +19,9 @@ public class ProjectService {
     
     public CustomResponse getProjects() {
         List<Project> projects = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<ProjectDTO> projectsDTO = ObjectMapperUtils.mapAll(projects, ProjectDTO.class);
         CustomResponse response = new CustomResponse();
-        response.getBody().setData(projects);
+        response.getBody().setData(projectsDTO);
         return response;
     }
     
