@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/api/educations")
 @RestController
@@ -56,6 +58,12 @@ public class EducationController {
     public ResponseEntity deleteEducation(@PathVariable Long id) {
         CustomResponse response = service.deleteEducation(id);
 
+        return new ResponseEntity(response.getBody(), response.getHttpStatus());
+    }
+        
+    @PostMapping("/{id}/logo")
+    public ResponseEntity uploadExperienceLogo(@PathVariable Long id,  @RequestParam("logo") MultipartFile file) {
+        CustomResponse response = service.uploadEducationLogo(id, file);
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
 }

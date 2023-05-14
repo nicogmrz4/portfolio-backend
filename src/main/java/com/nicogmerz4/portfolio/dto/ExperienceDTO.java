@@ -11,6 +11,7 @@ public class ExperienceDTO {
     @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")
     @Size(max = 30, message = "El nombre de la empresa puede tener hasta {max} carácteres.")
     private String company;
+    private String logo;
     @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")
     @Size(max = 20, message = "El puesto puede tener hasta {max} carácteres.")
     private String job;

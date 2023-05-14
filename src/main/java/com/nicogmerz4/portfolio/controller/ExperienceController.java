@@ -4,6 +4,7 @@ import com.nicogmerz4.portfolio.dto.ExperienceDTO;
 import com.nicogmerz4.portfolio.model.Experience;
 import com.nicogmerz4.portfolio.service.CustomResponse;
 import com.nicogmerz4.portfolio.service.ExperienceService;
+import com.nicogmerz4.portfolio.service.ImageStorageService;
 import com.sun.net.httpserver.Headers;
 import jakarta.validation.Valid;
 import java.text.ParseException;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/experiences")
@@ -63,6 +66,12 @@ public class ExperienceController {
     public ResponseEntity deleteExperience(@PathVariable Long id) {
         CustomResponse response = service.deleteExperience(id);
         
+        return new ResponseEntity(response.getBody(), response.getHttpStatus());
+    }
+    
+    @PostMapping("/{id}/logo")
+    public ResponseEntity uploadExperienceLogo(@PathVariable Long id,  @RequestParam("logo") MultipartFile file) {
+        CustomResponse response = service.uploadExperienceLogo(id, file);
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
 }

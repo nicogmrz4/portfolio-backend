@@ -11,11 +11,15 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ExperienceService {
     @Autowired
     ExperienceRepository repo;
+    
+    @Autowired
+    private ImageStorageService imageStorageService;
 
     public CustomResponse getExperiences() {
         List<Experience> experiences = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
@@ -63,6 +67,7 @@ public class ExperienceService {
         CustomResponse response = new CustomResponse();
 
         if (experience != null) {
+            deleteLogoIfIsNotNull(experience);
             repo.delete(experience);
             response.getBody().setMessage("Experience deleted");
             return response;
@@ -97,5 +102,31 @@ public class ExperienceService {
         response.getBody().setMessage("Experience does't exist");
         response.setHttpStatus(HttpStatus.NOT_FOUND);
         return response;
+    }
+    
+    public CustomResponse uploadExperienceLogo(Long id, MultipartFile file) {
+        Experience experience = repo.findById(id).orElse(null);
+        CustomResponse response = new CustomResponse();
+        
+        deleteLogoIfIsNotNull(experience);
+        
+        String filename = imageStorageService.store(file);
+
+        experience.setLogo(filename);            
+        experience = repo.save(experience);
+
+        ExperienceDTO experienceDTO = ObjectMapperUtils.map(experience, ExperienceDTO.class);
+        
+        response.getBody().addData(experienceDTO);
+        
+        return response;
+    }
+    
+    public void deleteLogoIfIsNotNull(Experience experience) {
+        String logo = experience.getLogo();
+        
+        if (logo != null) {
+            imageStorageService.delete(logo);
+        }
     }
 }

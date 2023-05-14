@@ -12,11 +12,15 @@ import com.nicogmerz4.portfolio.utils.ObjectMapperUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EducationService {
     @Autowired
     EducationRepository repo;
+    
+    @Autowired
+    ImageStorageService imageStorageService;
     
     public CustomResponse getEducations() {
         List<Education> educations = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
@@ -64,6 +68,7 @@ public class EducationService {
         CustomResponse response = new CustomResponse();
     
         if (education != null) {
+            deleteLogoIfIsNotNull(education);
             repo.delete(education);
             response.getBody().setMessage("Education deleted");
             return response;
@@ -97,5 +102,31 @@ public class EducationService {
         response.getBody().setMessage("Education does't exist");
         response.setHttpStatus(HttpStatus.NOT_FOUND);
         return response;
+    }
+    
+        public CustomResponse uploadEducationLogo(Long id, MultipartFile file) {
+        Education education = repo.findById(id).orElse(null);
+        CustomResponse response = new CustomResponse();
+        
+        deleteLogoIfIsNotNull(education);
+        
+        String filename = imageStorageService.store(file);
+
+        education.setLogo(filename);            
+        education = repo.save(education);
+
+        EducationDTO educationDTO = ObjectMapperUtils.map(education, EducationDTO.class);
+        
+        response.getBody().addData(educationDTO);
+        
+        return response;
+    }
+    
+    public void deleteLogoIfIsNotNull(Education education) {
+        String logo = education.getLogo();
+        
+        if (logo != null) {
+            imageStorageService.delete(logo);
+        }
     }
 }

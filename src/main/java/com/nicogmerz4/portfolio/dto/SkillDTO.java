@@ -15,4 +15,5 @@ public class SkillDTO {
     @NotNull(message = "Este campo es obligatorio, no puede estar vacio.")
     @Range(min = 1, max = 100, message = "El porcentaja debe ser de {min} a {max}.")
     private int percentage;
+    private String icon;
 }

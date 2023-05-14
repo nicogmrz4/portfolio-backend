@@ -1,7 +1,6 @@
 package com.nicogmerz4.portfolio.controller;
 
 import com.nicogmerz4.portfolio.dto.SkillDTO;
-import com.nicogmerz4.portfolio.model.Skill;
 import com.nicogmerz4.portfolio.service.CustomResponse;
 import com.nicogmerz4.portfolio.service.SkillService;
 import jakarta.validation.Valid;
@@ -14,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/api/skills")
 @RestController
@@ -48,6 +49,12 @@ public class SkillController {
     public ResponseEntity deleteSkill(@PathVariable Long id) {
         CustomResponse response = service.deleteSkill(id);
         
+        return new ResponseEntity(response.getBody(), response.getHttpStatus());
+    }
+    
+    @PostMapping("/{id}/icon")
+    public ResponseEntity uploadExperienceLogo(@PathVariable Long id,  @RequestParam("icon") MultipartFile file) {
+        CustomResponse response = service.uploadSkillLogo(id, file);
         return new ResponseEntity(response.getBody(), response.getHttpStatus());
     }
 }
