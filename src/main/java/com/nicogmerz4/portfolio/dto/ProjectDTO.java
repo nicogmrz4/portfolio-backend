@@ -10,6 +10,10 @@ public class ProjectDTO {
     private Long id;
     private String image;
     @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")
+    @Pattern(regexp = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", message = "Formato de de URL invalido.")
+    @Size(max = 2048, message = "La URL puede tener hasta {max} carácteres.")
+    private String url;
+    @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")
     @Size(max = 20, message = "El título puedete tener hasta {max} carácteres.")
     private String title;
     @NotBlank(message = "Este campo es obligatorio, no puede estar vacio.")

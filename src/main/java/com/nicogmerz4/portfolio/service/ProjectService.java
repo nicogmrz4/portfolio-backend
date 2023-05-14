@@ -48,13 +48,17 @@ public class ProjectService {
         Project project = new Project();
         project.setTitle(newProject.getTitle());
         project.setDescription(newProject.getDescription());
+        project.setUrl(newProject.getUrl());
         project.setCreatedAt(new SimpleDateFormat("dd/MM/yyyy").parse(newProject.getCreatedAt()));
-
+        
         project = repo.save(project);
+        
+        ProjectDTO projectDTO = ObjectMapperUtils.map(project, ProjectDTO.class);
+        projectDTO.setCreatedAt(newProject.getCreatedAt());
 
         CustomResponse response = new CustomResponse();
         response.getBody().setMessage("Project created");
-        response.getBody().addData(project);
+        response.getBody().addData(projectDTO);
         response.setHttpStatus(HttpStatus.CREATED);
         return response;
     }
