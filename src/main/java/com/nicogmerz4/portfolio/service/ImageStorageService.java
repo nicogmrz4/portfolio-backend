@@ -55,6 +55,21 @@ public class ImageStorageService {
             throw new RuntimeException("No se pudo guardar la imagen", e);
         }
     }
+    
+    public String store(MultipartFile file, String name) {
+        try {
+            String fileType = getFileExtension(file);
+            String filename = name + fileType;
+            Path destinationFile = rootLocation.resolve(Paths.get(filename))
+                    .normalize().toAbsolutePath();
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+            return filename;
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo guardar la imagen", e);
+        }
+    }
 
     private String getFileExtension(MultipartFile file) {
         String fileName = file.getOriginalFilename();
